@@ -1,24 +1,28 @@
-import { WebSocketServer } from "ws";
+import { Server } from "socket.io";
 
-const server = new WebSocketServer({ port: 3001 });
+const io = new Server(3001, {
+  cors: {
+    origin: `http://localhost:3000`,
+  },
+});
 
-server.on("connection", (socket) => {
-  // send a message to the client
-  socket.send(
-    JSON.stringify({
-      type: "hello from server",
-      content: [1, "2"],
-    })
-  );
+io.on("connection", (socket) => {
+  console.log(`⚡: ${socket.id} user just connected!`);
+  socket.on("disconnect", () => {
+    console.log("🔥: A user disconnected");
+  });
+});
 
-  // receive a message from the client
-  socket.on("message", (data: any) => {
-    const packet = JSON.parse(data);
+io.of("/user", (socket) => {
+  console.log(`USER ⚡: ${socket.id} user just connected!`);
+  socket.on("disconnect", () => {
+    console.log("USER 🔥: A user disconnected");
+  });
+});
 
-    switch (packet.type) {
-      case "hello from client":
-        // ...
-        break;
-    }
+io.of("/admin", (socket) => {
+  console.log(`ADMIN ⚡: ${socket.id} user just connected!`);
+  socket.on("disconnect", () => {
+    console.log("ADMIN 🔥: A user disconnected");
   });
 });

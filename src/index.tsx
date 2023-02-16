@@ -4,15 +4,19 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./modules/app/components/App";
 import { ChatRoomContainer } from "./modules/chat-room/components/chat-room-container";
+import { createSocketManager } from "./modules/socket/helpers";
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+
+const manager = createSocketManager();
+
 root.render(
   <React.StrictMode>
     <App>
-      <ChatRoomContainer />
+      <ChatRoomContainer manager={manager} />
     </App>
   </React.StrictMode>
 );
